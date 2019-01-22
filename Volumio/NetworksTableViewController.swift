@@ -30,7 +30,7 @@ class NetworksTableViewController: UITableViewController {
 
         refreshControl?.addTarget(self,
             action: #selector(handleRefresh),
-            for: UIControlEvents.valueChanged
+            for: UIControl.Event.valueChanged
         )
     }
 
@@ -55,14 +55,14 @@ class NetworksTableViewController: UITableViewController {
         )
     }
 
-    func getNetworks(notification: NSNotification) {
+	@objc func getNetworks(notification: NSNotification) {
         guard let sources = notification.object as? [NetworkObject] else { return }
 
         networksData.append(sources)
         tableView.reloadData()
     }
 
-    func getWireless(notification: NSNotification) {
+	@objc func getWireless(notification: NSNotification) {
         guard let sources = notification.object as? [NetworkObject] else { return }
 
         networksData.append(sources)
@@ -105,7 +105,7 @@ class NetworksTableViewController: UITableViewController {
         }
     }
 
-    func handleRefresh(refreshControl: UIRefreshControl) {
+	@objc func handleRefresh(refreshControl: UIRefreshControl) {
 
         networksData.removeAll()
         tableView.reloadData()

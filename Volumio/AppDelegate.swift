@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
 
         Log.setLog(level: BundleInfo[.logLevel])
@@ -25,11 +25,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         UIBarButtonItem.appearance()
             .setTitleTextAttributes(
-				[NSAttributedStringKey.foregroundColor: UIColor.clear], for: UIControlState.normal
+				[NSAttributedString.Key.foregroundColor: UIColor.clear], for: UIControl.State.normal
         )
         UIBarButtonItem.appearance()
             .setTitleTextAttributes(
-				[NSAttributedStringKey.foregroundColor: UIColor.clear], for: UIControlState.highlighted
+				[NSAttributedString.Key.foregroundColor: UIColor.clear], for: UIControl.State.highlighted
         )
         UINavigationBar.appearance().tintColor = UIColor.black
 

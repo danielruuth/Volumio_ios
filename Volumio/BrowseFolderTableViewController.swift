@@ -30,7 +30,7 @@ class BrowseFolderTableViewController: BrowseTableViewController,
 
         refreshControl?.addTarget(self,
             action: #selector(handleRefresh),
-            for: UIControlEvents.valueChanged
+            for: UIControl.Event.valueChanged
         )
 
         // browseHeaderView
@@ -177,7 +177,7 @@ class BrowseFolderTableViewController: BrowseTableViewController,
     }
 
     override func tableView(_ tableView: UITableView,
-        commit editingStyle: UITableViewCellEditingStyle,
+        commit editingStyle: UITableViewCell.EditingStyle,
         forRowAt indexPath: IndexPath
     ) {
         if editingStyle == .delete {
@@ -251,7 +251,7 @@ class BrowseFolderTableViewController: BrowseTableViewController,
         }
     }
 
-    func handleRefresh(refreshControl: UIRefreshControl) {
+	@objc func handleRefresh(refreshControl: UIRefreshControl) {
         VolumioIOManager.shared.browseLibrary(uri: serviceUri)
         refreshControl.endRefreshing()
     }

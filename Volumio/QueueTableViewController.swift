@@ -32,7 +32,7 @@ class QueueTableViewController: VolumioTableViewController, QueueActionsDelegate
 
         self.refreshControl?.addTarget(self,
             action: #selector(handleRefresh),
-            for: UIControlEvents.valueChanged
+            for: UIControl.Event.valueChanged
         )
 
         let frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 56.0)
@@ -164,7 +164,7 @@ class QueueTableViewController: VolumioTableViewController, QueueActionsDelegate
     }
 
     override func tableView(_ tableView: UITableView,
-        commit editingStyle: UITableViewCellEditingStyle,
+        commit editingStyle: UITableViewCell.EditingStyle,
         forRowAt indexPath: IndexPath
     ) {
         if editingStyle == .delete {
@@ -215,7 +215,7 @@ class QueueTableViewController: VolumioTableViewController, QueueActionsDelegate
         return 56.0
     }
 
-    func handleRefresh(refreshControl: UIRefreshControl) {
+	@objc func handleRefresh(refreshControl: UIRefreshControl) {
         VolumioIOManager.shared.getQueue()
         refreshControl.endRefreshing()
     }

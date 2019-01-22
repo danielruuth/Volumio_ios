@@ -26,7 +26,7 @@ class BrowseSourcesTableViewController: VolumioTableViewController {
 
         refreshControl?.addTarget(self,
             action: #selector(handleRefresh),
-            for: UIControlEvents.valueChanged
+            for: UIControl.Event.valueChanged
         )
     }
 
@@ -102,7 +102,7 @@ class BrowseSourcesTableViewController: VolumioTableViewController {
         return cell
     }
 
-    func handleRefresh(refreshControl: UIRefreshControl) {
+	@objc func handleRefresh(refreshControl: UIRefreshControl) {
         VolumioIOManager.shared.browseSources()
         refreshControl.endRefreshing()
     }

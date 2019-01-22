@@ -124,7 +124,7 @@ private func generateDebugDescription(_ any: Any) -> String {
         var string = "("
 
         for (index, property) in properties.enumerated() {
-            if property.label!.characters.first! == "." {
+			if property.label!.prefix(1) == "." {
                 string += generateDebugDescription(property.value)
             } else {
                 string += "\(property.label!): \(generateDebugDescription(property.value))"
@@ -171,7 +171,7 @@ private func generateDebugDescription(_ any: Any) -> String {
         var string = "\(mirror.subjectType).\(properties.first!.label!)"
         let associatedValueString = generateDebugDescription(properties.first!.value)
 
-        if associatedValueString.characters.first! == "(" {
+        if associatedValueString.prefix(1) == "(" {
             string += associatedValueString
         } else {
             string += "(\(associatedValueString))"

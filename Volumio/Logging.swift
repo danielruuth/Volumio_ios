@@ -40,7 +40,7 @@ public func < (lval: LogLevel, rval: LogLevel) -> Bool {
 
 open class Logger {
 
-    open let name: String
+    public let name: String
 
     open var level: LogLevel
 

@@ -33,7 +33,7 @@ class SettingsViewController: VolumioFormViewController {
 				}.onCellSelection { _,_  in
                 guard let playerURL = VolumioIOManager.shared.currentPlayer?.url
                     else { return }
-                UIApplication.shared.open(playerURL, options: [:], completionHandler: nil)
+                UIApplication.shared.open(playerURL, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
             }
 
             +++ Section("")
@@ -59,14 +59,24 @@ class SettingsViewController: VolumioFormViewController {
     // MARK: -
 
     func clearImageCache() {
-        ImageCache.default.calculateDiskCacheSize { (size) in
+		//@danielruuth
+		ImageCache.default.calculateDiskStorageSize { (Result) in
+			Log.info("Used disk cache size by bytes")
+			ImageCache.default.clearDiskCache(completion: {
+				ImageCache.default.clearMemoryCache()
+			})
+		}
+        /*ImageCache.default.calculateDiskCacheSize { (size) in
             Log.info("Used disk cache size by bytes: \(size / 1_000_000)")
 
-			//@danielruuth
-            /*ImageCache.default.clearDiskCache(completion: { _ in
+			
+            /*ImageCache.default.clearDiskCache(completion: { data in
                 ImageCache.default.clearMemoryCache()
             })*/
-        }
+			ImageCache.default.clearDiskCache(completion: {
+				ImageCache.default.clearMemoryCache()
+			})
+        }*/
     }
 
     func shutdownAlert() {
@@ -151,4 +161,9 @@ extension SettingsViewController {
         return NSLocalizedString("CANCEL", comment: "[trigger] cancel action")
     }
 
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
 }

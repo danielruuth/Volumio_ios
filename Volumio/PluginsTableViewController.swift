@@ -25,7 +25,7 @@ class PluginsTableViewController: UITableViewController, ObservesNotifications {
 
         refreshControl?.addTarget(self,
             action: #selector(handleRefresh),
-            for: UIControlEvents.valueChanged
+            for: UIControl.Event.valueChanged
         )
     }
 
@@ -95,7 +95,7 @@ class PluginsTableViewController: UITableViewController, ObservesNotifications {
         return cell
     }
 
-    func handleRefresh(refreshControl: UIRefreshControl) {
+	@objc func handleRefresh(refreshControl: UIRefreshControl) {
         VolumioIOManager.shared.getInstalledPlugins()
         refreshControl.endRefreshing()
     }

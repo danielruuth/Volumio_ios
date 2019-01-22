@@ -77,7 +77,7 @@ class PlaybackViewController: VolumioViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        registerObserver(forName: .UIApplicationWillEnterForeground) { _ in
+        registerObserver(forName: UIApplication.willEnterForegroundNotification) { _ in
             self.clearAllNotice()
 
             self.update()
@@ -193,16 +193,16 @@ class PlaybackViewController: VolumioViewController {
         switch status {
         case "play":
             startTimer()
-            playButton.setImage(UIImage(named: "pause"), for: UIControlState.normal)
+            playButton.setImage(UIImage(named: "pause"), for: UIControl.State.normal)
         case "pause":
             stopTimer()
-            playButton.setImage(UIImage(named: "play"), for: UIControlState.normal)
+            playButton.setImage(UIImage(named: "play"), for: UIControl.State.normal)
         case "stop":
             stopTimer()
-            playButton.setImage(UIImage(named: "play"), for: UIControlState.normal)
+            playButton.setImage(UIImage(named: "play"), for: UIControl.State.normal)
         default:
             stopTimer()
-            playButton.setImage(UIImage(named: "stop"), for: UIControlState.normal)
+            playButton.setImage(UIImage(named: "stop"), for: UIControl.State.normal)
         }
     }
 
@@ -252,7 +252,7 @@ class PlaybackViewController: VolumioViewController {
         seekValue.text = timeFormatted(totalSeconds: counter / 1000)
     }
 
-    func updateSeek() {
+	@objc func updateSeek() {
         counter += 1000
         seekValue.text = timeFormatted(totalSeconds: counter / 1000)
 

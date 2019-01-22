@@ -27,7 +27,7 @@ struct Player {
     }
 
     private func validate(name: String) -> Bool {
-        return name.characters.count > 0
+        return name.count > 0
     }
 
     private func validate(host: String) -> Bool {

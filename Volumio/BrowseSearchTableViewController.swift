@@ -27,7 +27,7 @@ class BrowseSearchTableViewController: BrowseTableViewController, UISearchBarDel
 
         refreshControl?.addTarget(self,
             action: #selector(handleRefresh),
-            for: UIControlEvents.valueChanged
+            for: UIControl.Event.valueChanged
         )
     }
 
@@ -120,7 +120,7 @@ class BrowseSearchTableViewController: BrowseTableViewController, UISearchBarDel
     }
 
     override func tableView(_ tableView: UITableView,
-        commit editingStyle: UITableViewCellEditingStyle,
+        commit editingStyle: UITableViewCell.EditingStyle,
         forRowAt indexPath: IndexPath
     ) {
     }
@@ -155,7 +155,7 @@ class BrowseSearchTableViewController: BrowseTableViewController, UISearchBarDel
         return 54.0
     }
 
-    func handleRefresh(refreshControl: UIRefreshControl) {
+	@objc func handleRefresh(refreshControl: UIRefreshControl) {
         if let text = searchBar.text {
             VolumioIOManager.shared.browseSearch(text: text)
         }
