@@ -1,5 +1,5 @@
 project 'Volumio.xcodeproj'
-# platform :ios, '10.0'
+platform :ios, '10.0'
 
 target 'Volumio' do
     use_frameworks!
@@ -9,9 +9,9 @@ target 'Volumio' do
     pod 'ObjectMapper'
     pod 'SwiftyJSON'
     pod 'Kingfisher'
-    pod 'Eureka', '~> 2.0.0-beta.1'
+    pod 'Eureka'
     pod 'MarqueeLabel/Swift'
     pod 'Dropper'
-    pod 'Fabric'
     pod 'Crashlytics'
+    pod 'Starscream'
 end

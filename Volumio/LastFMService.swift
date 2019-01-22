@@ -42,8 +42,10 @@ class LastFMService {
             .responseJSON(queue: queue) { (response) in
                 switch response.result {
                 case .success(let value):
-                    let infoJSON = JSON(string: value as Any)
-
+                    //let infoJSON = JSON(string: value as Any)
+					let infoJSON = JSON(parseJSON: value as Any as! String)
+					
+					
                     // find album image json for image of size 'large'
                     let imageJSON = infoJSON["album"]["image"].arrayValue.first(where: { (json) in
                         return json["size"] == "large"

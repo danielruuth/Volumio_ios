@@ -132,7 +132,7 @@ class BrowseSearchTableViewController: BrowseTableViewController, UISearchBarDel
         let itemList = sourcesList[indexPath.section]
         let item = itemList.items![indexPath.row] as LibraryObject
 
-        let play = UITableViewRowAction(style: .normal, title: localizedPlayTitle) { _ in
+        let play = UITableViewRowAction(style: .normal, title: localizedPlayTitle) { (data, _) in
             guard let uri = item.uri, let title = item.title, let service = item.service
                 else { return }
             VolumioIOManager.shared.addAndPlay(uri: uri, title: title, service: service)
@@ -140,7 +140,7 @@ class BrowseSearchTableViewController: BrowseTableViewController, UISearchBarDel
         }
         play.backgroundColor = UIColor.playButtonBackground
 
-        let more = UITableViewRowAction(style: .normal, title: localizedMoreTitle) { _ in
+        let more = UITableViewRowAction(style: .normal, title: localizedMoreTitle) { (data, _) in
             self.playlistActions(item: item)
             tableView.setEditing(false, animated: true)
         }

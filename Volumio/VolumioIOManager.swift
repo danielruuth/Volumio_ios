@@ -13,8 +13,10 @@ import SwiftyJSON
 class VolumioIOManager: NSObject {
 
     static let shared = VolumioIOManager()
-
-    private var socket: SocketIOClient?
+	private var socket: SocketIOClient?
+	private var socketManager:SocketManager?
+	
+	
 
     var currentPlayer: Player?
 
@@ -56,17 +58,21 @@ class VolumioIOManager: NSObject {
 
         guard let socket = socket else { return }
 
+		Log.entry(self, message: "##socket: \(socket)")
+
+		
         socket.connect(timeoutAfter: 10) {
             NotificationCenter.default.post(name: .disconnected, object: nil)
         }
-
-        socket.on(.connect) { _ in
+		
+        socket.on(.connect) { data, ack in
+			Log.entry(self, message: "!!Socket connected")
             NotificationCenter.default.post(name: .connected, object: nil)
 
             self.getState()
         }
-
-        socket.on(.pushState) { (data, _) in
+		
+		socket.on(.pushState) { data, ack in
             guard let json = data[0] as? [String: Any] else { return }
 
             self.currentTrack = Mapper<TrackObject>().map(JSONObject: json)
@@ -93,6 +99,7 @@ class VolumioIOManager: NSObject {
         currentPlayer = player
 
         socket = SocketIOClient(for: player)
+		
 
         establishConnection()
 
@@ -248,7 +255,7 @@ class VolumioIOManager: NSObject {
     func addToQueue(uri: String, title: String, service: String) {
         guard let socket = socket else { return }
         socket.emit(.addToQueue, ["uri": uri, "title": title, "service": service])
-        socket.once(.pushQueue) { _ in
+        socket.once(.pushQueue) { (data, _) in
             NotificationCenter.default.post(name: .addedToQueue, object: title)
         }
     }
@@ -260,7 +267,7 @@ class VolumioIOManager: NSObject {
             if let json = data[0] as? [[String:Any]] {
                 if json.count == 0 {
                     socket.emit(.addToQueue, ["uri": uri, "title": title, "service": service])
-                    socket.once(.pushQueue) { _ in
+                    socket.once(.pushQueue) { (data, _) in
                         NotificationCenter.default.post(name: .addedToQueue, object: title)
                         self.playTrack(position: 0)
                     }
@@ -272,10 +279,10 @@ class VolumioIOManager: NSObject {
     func addAndPlay(uri: String, title: String, service: String) {
         guard let socket = socket else { return }
         getQueue()
-        socket.once(.pushQueue) { [unowned socket] _ in
+        socket.once(.pushQueue) { [unowned socket] (data, _) in
             if let queryItems = self.currentQueue?.count {
                 socket.emit(.addToQueue, ["uri": uri, "title": title, "service": service])
-                socket.once(.pushQueue) { _ in
+                socket.once(.pushQueue) { (data, _) in
                     self.playTrack(position: queryItems)
                 }
                 NotificationCenter.default.post(name: .addedToQueue, object: title)
@@ -305,7 +312,7 @@ class VolumioIOManager: NSObject {
     func removeFromQueue(position: Int) {
         guard let socket = socket else { return }
         socket.emit(.removeFromQueue, ["value": "\(position)"])
-        socket.once(.pushToastMessage) { _ in
+        socket.once(.pushToastMessage) { (data, _) in
             NotificationCenter.default.post(name: .removedfromQueue, object: nil)
         }
     }
@@ -329,7 +336,7 @@ class VolumioIOManager: NSObject {
         guard let socket = socket else { return }
         stop()
         socket.emit(.clearQueue)
-        socket.once(.pushQueue) { _ in
+        socket.once(.pushQueue) { (data, _) in
             self.getQueue()
         }
     }
@@ -351,7 +358,7 @@ class VolumioIOManager: NSObject {
     func addToPlaylist(name: String, uri: String, service: String) {
         guard let socket = socket else { return }
         socket.emit(.addToPlaylist, ["name": name, "uri": uri, "service": service])
-        socket.once(.pushToastMessage) { _ in
+        socket.once(.pushToastMessage) { (data, _) in
             NotificationCenter.default.post(name: .addedToPlaylist, object: name)
         }
     }
@@ -359,7 +366,7 @@ class VolumioIOManager: NSObject {
     func removeFromPlaylist(name: String, uri: String, service: String) {
         guard let socket = socket else { return }
         socket.emit(.removeFromPlaylist, ["name": name, "uri": uri, "service": service])
-        socket.once(.pushToastMessage) { _ in
+        socket.once(.pushToastMessage) { (data, _) in
             NotificationCenter.default.post(name: .removedFromPlaylist, object: name)
         }
     }
@@ -367,7 +374,7 @@ class VolumioIOManager: NSObject {
     func createPlaylist(name: String, title: String, uri: String, service: String) {
         guard let socket = socket else { return }
         socket.emit(.createPlaylist, ["name": name])
-        socket.once(.pushCreatePlaylist) { _ in
+        socket.once(.pushCreatePlaylist) { (data, _) in
             self.addToPlaylist(name: name, uri: uri, service: service)
         }
     }
@@ -375,7 +382,7 @@ class VolumioIOManager: NSObject {
     func deletePlaylist(name: String) {
         guard let socket = socket else { return }
         socket.emit(.deletePlaylist, ["name": name])
-        socket.once(.pushToastMessage) { _ in
+        socket.once(.pushToastMessage) { (data, _) in
             NotificationCenter.default.post(name: .playlistDeleted, object: name)
         }
     }
@@ -383,7 +390,7 @@ class VolumioIOManager: NSObject {
     func playPlaylist(name: String) {
         guard let socket = socket else { return }
         socket.emit(.playPlaylist, ["name": name])
-        socket.once(.pushToastMessage) { _ in
+        socket.once(.pushToastMessage) { (data, _) in
             NotificationCenter.default.post(name: .playlistPlaying, object: name)
         }
     }
@@ -452,12 +459,14 @@ class VolumioIOManager: NSObject {
 // Convenience extension to avoid code duplication
 
 extension SocketIOClient {
-
+	//This returns a socket...
     convenience init(for player: Player) {
         guard let url = URL(string: "http://\(player.host):\(player.port)") else {
             fatalError("Unable to construct valid url for player \(player)")
         }
-        self.init(socketURL: url, config: [.reconnectWait(5)])
-    }
+		let socketManager = SocketManager(socketURL: url, config: [.reconnectWait(5)])
+		//socket = socketManager.defaultSocket
+		self.init(manager:socketManager, nsp:"/wave")
+	}
 
 }

@@ -22,23 +22,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-
 import Foundation
+import UIKit
 
 /// Base class for the Eureka cells
-open class BaseCell : UITableViewCell, BaseCellType {
+open class BaseCell: UITableViewCell, BaseCellType {
 
     /// Untyped row associated to this cell.
     public var baseRow: BaseRow! { return nil }
 
     /// Block that returns the height for this cell.
-    public var height: (()->CGFloat)?
+    public var height: (() -> CGFloat)?
 
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
-    public required override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    public required override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
 
@@ -46,7 +46,7 @@ open class BaseCell : UITableViewCell, BaseCellType {
      Function that returns the FormViewController this cell belongs to.
      */
     public func formViewController() -> FormViewController? {
-        var responder : AnyObject? = self
+        var responder: AnyObject? = self
         while responder != nil {
             if let formVC = responder as? FormViewController {
               return formVC
@@ -56,7 +56,7 @@ open class BaseCell : UITableViewCell, BaseCellType {
         return nil
     }
 
-    open func setup(){}
+    open func setup() {}
     open func update() {}
 
     open func didSelect() {}
@@ -86,16 +86,18 @@ open class BaseCell : UITableViewCell, BaseCellType {
 }
 
 /// Generic class that represents the Eureka cells.
-open class Cell<T: Equatable> : BaseCell, TypedCellType {
+open class Cell<T>: BaseCell, TypedCellType where T: Equatable {
 
     public typealias Value = T
 
     /// The row associated to this cell
-    public weak var row : RowOf<T>!
+    public weak var row: RowOf<T>!
+
+    private var updatingCellForTintColorDidChange = false
 
     /// Returns the navigationAccessoryView if it is defined or calls super if not.
     override open var inputAccessoryView: UIView? {
-        if let v = formViewController()?.inputAccessoryView(for: row){
+        if let v = formViewController()?.inputAccessoryView(for: row) {
             return v
         }
         return super.inputAccessoryView
@@ -105,22 +107,21 @@ open class Cell<T: Equatable> : BaseCell, TypedCellType {
         super.init(coder: aDecoder)
     }
 
-    required public init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    required public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        height = { UITableViewAutomaticDimension }
     }
 
     /**
      Function responsible for setting up the cell at creation time.
      */
-    open override func setup(){
+    open override func setup() {
         super.setup()
     }
 
     /**
      Function responsible for updating the cell each time it is reloaded.
      */
-    open override func update(){
+    open override func update() {
         super.update()
         textLabel?.text = row.title
         textLabel?.textColor = row.isDisabled ? .gray : .black
@@ -133,7 +134,7 @@ open class Cell<T: Equatable> : BaseCell, TypedCellType {
     open override func didSelect() {}
 
     override open var canBecomeFirstResponder: Bool {
-        get { return false }
+        return false
     }
 
     open override func becomeFirstResponder() -> Bool {
@@ -152,6 +153,17 @@ open class Cell<T: Equatable> : BaseCell, TypedCellType {
         return result
     }
 
+    open override func tintColorDidChange() {
+        super.tintColorDidChange()
+
+        /* Protection from infinite recursion in case an update method changes the tintColor */
+        if !updatingCellForTintColorDidChange && row != nil {
+            updatingCellForTintColorDidChange = true
+            row.updateCell()
+            updatingCellForTintColorDidChange = false
+        }
+    }
+
     /// The untyped row associated to this cell.
-    public override var baseRow : BaseRow! { return row }
+    public override var baseRow: BaseRow! { return row }
 }

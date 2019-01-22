@@ -30,7 +30,7 @@ class SettingsViewController: VolumioFormViewController {
 
             <<< ButtonRow(localizedOpenWebUITitle) {
                 $0.title = $0.tag
-            }.onCellSelection { _ in
+				}.onCellSelection { _,_  in
                 guard let playerURL = VolumioIOManager.shared.currentPlayer?.url
                     else { return }
                 UIApplication.shared.open(playerURL, options: [:], completionHandler: nil)
@@ -39,19 +39,19 @@ class SettingsViewController: VolumioFormViewController {
             +++ Section("")
             <<< ButtonRow(localizedShutdownOptionsTitle) {
                 $0.title = $0.tag
-            }.onCellSelection { [weak self] _ in
+            }.onCellSelection { [weak self] (data, _) in
                 self?.shutdownAlert()
             }
 
             +++ Section(localizedDebugSectionTitle)
             <<< ButtonRow(localizedChangePlayerTitle) {
                 $0.title = $0.tag
-            }.onCellSelection{ _ in
+            }.onCellSelection{ (data, _) in
                 VolumioIOManager.shared.disconnect(unsetDefault: true)
             }
             <<< ButtonRow(localizedClearCacheTitle) {
                 $0.title = $0.tag
-            }.onCellSelection { [weak self] _ in
+            }.onCellSelection { [weak self] (data, _) in
                 self?.clearImageCache()
             }
     }
@@ -62,9 +62,10 @@ class SettingsViewController: VolumioFormViewController {
         ImageCache.default.calculateDiskCacheSize { (size) in
             Log.info("Used disk cache size by bytes: \(size / 1_000_000)")
 
-            ImageCache.default.clearDiskCache(completion: { _ in
+			//@danielruuth
+            /*ImageCache.default.clearDiskCache(completion: { _ in
                 ImageCache.default.clearMemoryCache()
-            })
+            })*/
         }
     }
 

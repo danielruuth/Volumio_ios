@@ -1,40 +1,57 @@
 PODS:
-  - Alamofire (4.4.0)
-  - Crashlytics (3.8.4):
-    - Fabric (~> 1.6.3)
+  - Alamofire (4.8.1)
+  - Crashlytics (3.12.0):
+    - Fabric (~> 1.9.0)
   - Dropper (2.7.6)
-  - Eureka (2.0.1)
-  - Fabric (1.6.11)
-  - Kingfisher (3.6.1)
-  - MarqueeLabel/Swift (3.0.1)
-  - ObjectMapper (2.2.5)
-  - Socket.IO-Client-Swift (8.3.3)
-  - SwiftyJSON (3.1.4)
+  - Eureka (4.3.1)
+  - Fabric (1.9.0)
+  - Kingfisher (5.1.0)
+  - MarqueeLabel/Swift (3.2.0)
+  - ObjectMapper (3.4.2)
+  - Socket.IO-Client-Swift (14.0.0):
+    - Starscream (~> 3.0.6)
+  - Starscream (3.0.6)
+  - SwiftyJSON (4.2.0)
 
 DEPENDENCIES:
   - Alamofire
   - Crashlytics
   - Dropper
-  - Eureka (~> 2.0.0-beta.1)
-  - Fabric
+  - Eureka
   - Kingfisher
   - MarqueeLabel/Swift
   - ObjectMapper
   - Socket.IO-Client-Swift
+  - Starscream
   - SwiftyJSON
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - Crashlytics
+    - Dropper
+    - Eureka
+    - Fabric
+    - Kingfisher
+    - MarqueeLabel
+    - ObjectMapper
+    - Socket.IO-Client-Swift
+    - Starscream
+    - SwiftyJSON
+
 SPEC CHECKSUMS:
-  Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
-  Crashlytics: 79e236942ca1e7fc641df1feb9a275360a78ab6a
+  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
+  Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
   Dropper: 52a020beb6fef2e4b1d55447f17099e5776954ef
-  Eureka: ae837bb1dfae0c07bc1bda7aeef87876eeb537c2
-  Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
-  Kingfisher: 2f31cb75f3e98d3d4c406cbdcd9b263e956cfa67
-  MarqueeLabel: 80ba85d2b76a9f5fa6c13de337db80bcd94feb1d
-  ObjectMapper: fb30f71e08470d1e5a20b199fafe1246281db898
-  Socket.IO-Client-Swift: a2faffdbde89c63aebc5d631041530c1068b02b8
-  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
+  Eureka: 28ea296f06710f6745266b71f17862048941a32d
+  Fabric: f988e33c97f08930a413e08123064d2e5f68d655
+  Kingfisher: fcec238063d17404fca89bf0a850583211c4cbf6
+  MarqueeLabel: 440a502b91a9179bd98f9fff00ba1150650a1c0e
+  ObjectMapper: 0d4402610f4e468903ae64629eec4784531e5c51
+  Socket.IO-Client-Swift: 21e6a8a23a7d367d5ddfab6cbbd3c679cf3c25d6
+  Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
+  SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
 
-PODFILE CHECKSUM: 779ce652085a38ccb81c82bd1105262d39c2dade
+PODFILE CHECKSUM: 24173372efa0b1cab22c80b09f06078b7ca18a28
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.5.3

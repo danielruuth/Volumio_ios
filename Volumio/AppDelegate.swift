@@ -8,7 +8,6 @@
 
 import UIKit
 
-import Fabric
 import Crashlytics
 
 @UIApplicationMain
@@ -22,17 +21,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         Log.setLog(level: BundleInfo[.logLevel])
 
-        Fabric.with([Crashlytics.self])
-
         handleArguments()
 
         UIBarButtonItem.appearance()
             .setTitleTextAttributes(
-                [NSForegroundColorAttributeName: UIColor.clear], for: UIControlState.normal
+				[NSAttributedStringKey.foregroundColor: UIColor.clear], for: UIControlState.normal
         )
         UIBarButtonItem.appearance()
             .setTitleTextAttributes(
-                [NSForegroundColorAttributeName: UIColor.clear], for: UIControlState.highlighted
+				[NSAttributedStringKey.foregroundColor: UIColor.clear], for: UIControlState.highlighted
         )
         UINavigationBar.appearance().tintColor = UIColor.black
 
