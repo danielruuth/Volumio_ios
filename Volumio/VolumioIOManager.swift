@@ -98,14 +98,23 @@ class VolumioIOManager: NSObject {
         }
         currentPlayer = player
 
-        socket = SocketIOClient(for: player)
+        socket = createConnection(to: player)//SocketIOClient(for: player)
 		
 
         establishConnection()
 
         return player
     }
-
+	
+	func createConnection(to player:Player, setDefalut: Bool = false) -> SocketIOClient{
+		guard let url = URL(string: "http://\(player.host):\(player.port)") else {
+			fatalError("Unable to construct valid url for player \(player)")
+		}
+		socketManager = SocketManager(socketURL: url, config: [.reconnectWait(5)])
+		socketManager?.connect()
+		return (socketManager?.defaultSocket)!
+	}
+	
     /**
         Connects to the current player.
         - Returns: The player to be connected to or nil if there is no current player.
@@ -458,7 +467,7 @@ class VolumioIOManager: NSObject {
 
 // Convenience extension to avoid code duplication
 
-extension SocketIOClient {
+/*extension SocketIOClient {
 	//This returns a socket...
     convenience init(for player: Player) {
         guard let url = URL(string: "http://\(player.host):\(player.port)") else {
@@ -466,7 +475,7 @@ extension SocketIOClient {
         }
 		let socketManager = SocketManager(socketURL: url, config: [.reconnectWait(5)])
 		//socket = socketManager.defaultSocket
-		self.init(manager:socketManager, nsp:"/wave")
+		self.init(manager:socketManager, nsp:"/")
 	}
 
-}
+}*/
